@@ -79,14 +79,12 @@ def main():
         entropy_bits = 256
 
     print("Do you want to:")
-    print("[1] Generate random entropy")
-    print("[2] Enter your own entropy (binary string of 128 or 256 bits)")
+    print("[1] Enter your own entropy (binary string of 128 or 256 bits)")
+    print("[2] Generate random entropy(DO NOT USE THIS TO STORE SATS. THIS IS FOR EDUCATION/LEARNING PURPOSED ONLY)")
     entropy_choice = input("Enter 1 or 2: ").strip()
 
     generator = BIP39MnemonicGenerator(entropy_bits=entropy_bits, wordlist_path='english.txt')
     if entropy_choice == "1":
-        result = generator.mnemonic()
-    elif entropy_choice == "2":
         user_entropy = input(f"Enter your entropy ({entropy_bits} bits) as a binary string:\n").strip()
         try:
             generator.set_entropy(user_entropy)
@@ -94,6 +92,8 @@ def main():
         except ValueError as e:
             print("Error:", e)
             return
+    elif entropy_choice == "2":
+        result = generator.mnemonic()
     else:
         print("Invalid choice.")
         return
