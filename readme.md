@@ -75,8 +75,8 @@ While I've built this tool with care, you should:
 
 1. **Clone or download this repository**
    ```bash
-   git clone <your-repo-url>
-   cd <repo-folder>
+   git clone git@github.com:pleb21/tosseeds.git
+   cd tosseeds
    ```
 
 2. **Install dependencies**
