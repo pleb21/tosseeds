@@ -41,50 +41,46 @@ def bits_to_words(chunks, wordlist):
 def get_entropy_digits(entropy_bits):
     print("\nChoose how you'd like to enter the toss results:")
     print("[1] Type them one by one (more secure, but slower)")
-    print(f"[2] Paste the result of {entropy_bits} tosses (faster, be careful!)")
+    print(f"[2] Paste all {entropy_bits} results at once (faster, be careful!)")
     choice = input("Enter 1 or 2: ").strip()
 
     if choice == "2":
         while True:
-            bits = input(f"Paste your {entropy_bits} toss result:\n").strip()
+            bits = input(f"Paste your {entropy_bits} toss results (0s and 1s):\n").strip()
             if len(bits) == entropy_bits and all(c in '01' for c in bits):
-                print("Toss result accepted.")
+                print("Toss results accepted.")
                 return bits
             else:
-                print(f"Invalid input. Please paste ONLY {entropy_bits} 0s and 1s.")
+                print(f"Invalid input. Please paste exactly {entropy_bits} characters (only 0s and 1s).")
     else:
         # Default to typing one-by-one input
-        print(f"Please enter toss results, {entropy_bits} 0s and 1s).")
+        print(f"Please enter {entropy_bits} coin toss results (0 for heads, 1 for tails).")
         entropy = ""
+        milestone = 10  # Show message every 10 tosses
+        
         while len(entropy) < entropy_bits:
-            next_digit = input(f"Digit {len(entropy)+1}/{entropy_bits}: Enter 0 or 1: ").strip()
+            next_digit = input(f"Toss {len(entropy)+1}/{entropy_bits}: Enter 0 or 1: ").strip()
             if next_digit not in ('0', '1'):
                 print("Invalid input. Enter only 0 or 1.")
                 continue
             entropy += next_digit
-            print(f"Current length: {len(entropy)}/{entropy_bits}")
-        print("Completed entry!")
+            
+            # Progress bar
+            completed = len(entropy)
+            progress_pct = (completed / entropy_bits) * 100
+            bar_length = 56
+            filled = int(bar_length * completed / entropy_bits)
+            bar = '█' * filled + '░' * (bar_length - filled)
+            
+            print(f"Progress: [{bar}] {completed}/{entropy_bits} ({progress_pct:.0f}%)")
+            
+            # Milestone messages
+            if completed % milestone == 0 and completed < entropy_bits:
+                print(f"✓ {completed} tosses done... keep going!")
+            
+        print("\n✓ All tosses entered! Great job!")
         return entropy
 
-'''
- def generate_receive_addresses(mnemonic, count):
-    """Generate `count` Bitcoin legacy receive addresses (P2PKH) from a BIP39 mnemonic."""
-    # Validate mnemonic
-    validator = Bip39MnemonicValidator(mnemonic)
-    # validator.SetLanguages(lang)
-    if not validator.IsValid():
-        raise ValueError("Invalid BIP39 mnemonic.")
-
-    # Generate seed with explicit language arg
-    seed_bytes = Bip39SeedGenerator(mnemonic).Generate()
-
-    bip44_mst_ctx = Bip44.FromSeed(seed_bytes, Bip44Coins.BITCOIN)
-    addresses = []
-    for i in range(count):
-        addr_ctx = bip44_mst_ctx.Purpose().Coin().Account(0).Change(Bip44Changes.CHAIN_EXT).AddressIndex(i)
-        addresses.append(addr_ctx.PublicKey().ToAddress())
-    return addresses
-'''
 def generate_receive_addresses(mnemonic, count, passphrase=""):
     """Generate `count` Bitcoin legacy receive addresses from a BIP39 mnemonic."""
 
@@ -111,15 +107,6 @@ def generate_receive_addresses(mnemonic, count, passphrase=""):
         addresses.append(addr_ctx.PublicKey().ToAddress())
     return addresses
     
-    # Generate seed directly without validation
-    # seed_bytes = Bip39SeedGenerator(mnemonic).Generate()
-
-    # bip44_mst_ctx = Bip44.FromSeed(seed_bytes, Bip44Coins.BITCOIN)
-    # addresses = []
-    # for i in range(count):
-    #     addr_ctx = bip44_mst_ctx.Purpose().Coin().Account(0).Change(Bip44Changes.CHAIN_EXT).AddressIndex(i)
-    #     addresses.append(addr_ctx.PublicKey().ToAddress())
-    # return addresses
 
 def addresses_prompt(mnemonic):
     print("\nWould you like to generate a Bitcoin receiving address from these seed words?")
@@ -238,29 +225,42 @@ def main():
         return
 
     print("\nChoose seed length:")
-    print("[1] 12 words (128 bits entropy)")
-    print("[2] 24 words (256 bits entropy)")
+    print("[1] 12 words (128 coin tosses)")
+    print("[2] 24 words (256 coin tosses)")
     word_choice = input("Enter 1 or 2: ").strip()
     if word_choice == "1":
         entropy_bits = 128
     elif word_choice == "2":
         entropy_bits = 256
     else:
-        print("Invalid choice, defaulting to 24 words (256 bits).")
-        entropy_bits = 256
+        print("Invalid choice, defaulting to 12 words (128 tosses).")
+        entropy_bits = 128
 
-    print("\nChoose how the seed is created:")
-    print("[1] Coin tosses\nYou would need to toss a coin, enter either 0 or 1 and do it {} times. This is the right way to ensure a truly random seed is generated.".format(entropy_bits))
-    print("\n[2] Generate a random seed (WARNING: ONLY FOR EDUCATIONAL USE, DO NOT USE FOR STORING REAL FUNDS)")
-    entropy_choice = input("Enter 1 or 2: ").strip()
-
+    print("\nChoose how to create your seed:")
+    print(f"[1] Coin tosses (RECOMMENDED)\n    Toss a coin {entropy_bits} times and enter 0 for heads, 1 for tails.\n    This ensures truly random seed generation.")
+    print("\n[2] Random generation")
+    print("    " + "=" * 50)
+    print("    ⚠️  CRITICAL WARNING - READ CAREFULLY ⚠️")
+    print("    " + "=" * 50)
+    print("    Computer-generated randomness is INSECURE")
+    print("    Use ONLY for testing and learning")
+    print("    NEVER use for real Bitcoin storage")
+    print("    For actual funds: ALWAYS use option 1 (coin tosses)")
+    print("    " + "=" * 50)
+    entropy_choice = input("\nEnter 1 or 2: ").strip()
     
 
     if entropy_choice == "1":
         entropy_bin = get_entropy_digits(entropy_bits)
     elif entropy_choice == "2":
+        print("\n⚠️  You selected RANDOM generation (insecure for real use)")
+        print("This should ONLY be used for educational/testing purposes.")
+        confirm = input("Type 'LEARNING' to confirm you understand: ").strip()
+        if confirm != "LEARNING":
+            print("Random generation cancelled. Please use coin tosses for real funds. Or learn to type LEARNING first.")
+            return
         entropy_bin = generate_entropy(entropy_bits)
-        print("\nGenerated entropy (for learning purposes):")
+        print("\n⚠️  Random seed generated (TESTING ONLY - not for real Bitcoin):")
         print(entropy_bin)
     else:
         print("Invalid choice.")
@@ -271,11 +271,13 @@ def main():
     chunks = split_into_chunks(full_bin)
     words = bits_to_words(chunks, wordlist)
     mnemonic = (" ".join(words))
-    print(f"\nEntropy ({entropy_bits} bits):\n{entropy_bin}\n")
-    print(f"Checksum bits:\n{checksum_bin}\n")
-    print(f"Seed words:\n{mnemonic}")
-    print("\n PLEASE WRITE & STORE THESE WORDS CAREFULLY IN THE EXACT ORDER. These words will NEVER be displayed again.")
-    # print(" ".join(words))
+
+    print(f"\n✓ Seed created successfully!")
+    print(f"\nYour coin tosses ({entropy_bits} tosses):\n{entropy_bin}\n")
+    print(f"Verification checksum:\n{checksum_bin}\n")
+    print(f"Your seed words:\n{mnemonic}")
+    print("\n⚠️  WRITE THESE WORDS DOWN ON PAPER IN THE EXACT ORDER")
+    print("Store them safely. Never store digitally. Never share with anyone.")
 
     addresses_prompt(mnemonic)
 
