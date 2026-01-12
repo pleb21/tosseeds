@@ -143,9 +143,21 @@ def addresses_prompt(mnemonic):
         print(f"Error: {e}")
         return
 
+    print("\n" + "=" * 60)
+    print("✓ ADDRESSES GENERATED SUCCESSFULLY!")
+    print("=" * 60)
     print("\nYour Bitcoin receiving address(es):")
     for idx, address in enumerate(addresses, 1):
         print(f"{idx}: {address}")
+    
+    print("\n" + "-" * 60)
+    print("ℹ️  What's next:")
+    print("-" * 60)
+    print("• You can receive Bitcoin at any of these addresses")
+    print("• Each address can be used multiple times (Not recommended for privacy)")
+    print("• Always verify addresses match when using other wallets")
+    print("• Keep your seed phrase safe - it controls these addresses")
+    print("-" * 60)
 
 
 # input existing mnemonic and get its receiving addresses
@@ -165,7 +177,7 @@ def input_existing_mnemonic(wordlist):
         word_count = 12
     
     words = []
-    print(f"\nEnter your {word_count}-word mnemonic phrase:")
+    print(f"\nEnter your {word_count}-word seed phrase:")
     
     for i in range(word_count):
         while True:
@@ -176,19 +188,33 @@ def input_existing_mnemonic(wordlist):
             else:
                 print(f"'{word}' is not in the BIP39 wordlist. Please try again.")
     
+    # Show entered mnemonic for confirmation
     mnemonic = " ".join(words)
-
-    # Validate by attempting seed generation
-    try:
-        Bip39SeedGenerator(mnemonic).Generate()
-        print("\n✓ Valid mnemonic!")
-        return mnemonic
-    except Exception:
-        print("\n✗ Invalid mnemonic.")
-        print("Would you like to try again? [y/n]")
-        if input().strip().lower() == 'y':
-            return input_existing_mnemonic(wordlist)
-        return None
+    print("\n" + "=" * 60)
+    print("You entered the following seed phrase:")
+    print("=" * 60)
+    
+    # Display with numbers for easy verification
+    for idx, word in enumerate(words, 1):
+        print(f"{idx:2d}. {word}")
+    
+    print("=" * 60)
+    
+    # Confirmation prompt
+    confirm = input("\nIs this correct? [y/n]: ").strip().lower()
+    if confirm != 'y':
+        try: 
+            print("\nLet's try again. Enter the words carefully this time")
+            Bip39SeedGenerator(mnemonic).Generate()
+            print("\n✓ Valid seed phrase!")
+            return mnemonic
+        except Exception:
+            print("\n✗ Invalid seed phrase (checksum failed).")
+            print("The words are correct but don't form a valid seed.")
+            print("Would you like to try again? [y/n]")
+            if input().strip().lower() == 'y':
+                return input_existing_mnemonic(wordlist)
+            return None
 
 # --- usage example ---
 def main():
@@ -271,13 +297,22 @@ def main():
     chunks = split_into_chunks(full_bin)
     words = bits_to_words(chunks, wordlist)
     mnemonic = (" ".join(words))
-
-    print(f"\n✓ Seed created successfully!")
+    
+    print("\n" + "=" * 60)
+    print("✓ SEED PHRASE CREATED SUCCESSFULLY!")
+    print("=" * 60)
     print(f"\nYour coin tosses ({entropy_bits} tosses):\n{entropy_bin}\n")
     print(f"Verification checksum:\n{checksum_bin}\n")
     print(f"Your seed words:\n{mnemonic}")
-    print("\n⚠️  WRITE THESE WORDS DOWN ON PAPER IN THE EXACT ORDER")
-    print("Store them safely. Never store digitally. Never share with anyone.")
+    print("\n" + "!" * 60)
+    print("⚠️  CRITICAL: WRITE THESE WORDS ON PAPER")
+    print("!" * 60)
+    print("• Write them in the EXACT order shown above")
+    print("• Store the paper in a secure location")
+    print("• NEVER store these words digitally (no photos, no files)")
+    print("• NEVER share them with anyone")
+    print("• These words give COMPLETE access to your Bitcoin")
+    print("!" * 60)
 
     addresses_prompt(mnemonic)
 
