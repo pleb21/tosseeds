@@ -89,6 +89,20 @@ While I've built this tool with care, you should:
    Save the official English BIP39 wordlist as `english.txt` in the same directory. You can find it at:
    https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt
 
+### Single-File HTML Version (Offline UI)
+
+To use the graphical interface in an air-gapped environment:
+
+1. **Build the HTML file** (Requires Internet once):
+   ```bash
+   python3 build.py
+   ```
+   This downloads necessary JS libraries and bundles them into `seed_simulator.html`.
+
+2. **Go Offline**: Transfer `seed_simulator.html` to your air-gapped machine via USB.
+
+3. **Run**: Open the file in any modern web browser. 
+
 ### Usage
 
 Run the script:

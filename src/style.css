@@ -1,0 +1,386 @@
+:root {
+    --primary: #F7931A;
+    --primary-hover: #e08b1f;
+    --dark-bg: #111;
+    --card-bg: #222;
+    --text: #eee;
+    --text-muted: #aaa;
+    --border: #333;
+    --success: #2ecc71;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--dark-bg);
+    color: var(--text);
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border);
+}
+
+header {
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+}
+
+h1 {
+    color: var(--primary);
+    margin: 0;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    margin-top: 5px;
+    font-size: 0.9rem;
+}
+
+h2 {
+    border-left: 4px solid var(--primary);
+    padding-left: 10px;
+}
+
+/* Buttons */
+button {
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #fff;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+.btn-secondary {
+    background: #444;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background: #555;
+}
+
+.btn-success {
+    background: var(--success);
+    color: #fff;
+    font-weight: bold;
+}
+
+.btn-success:disabled {
+    background: #333;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.btn-toss {
+    font-size: 1.2rem;
+    padding: 20px 30px;
+    margin: 10px;
+    width: 45%;
+}
+
+.btn-head {
+    background: #E67E22;
+    color: white;
+}
+
+.btn-tail {
+    background: #3498DB;
+    color: white;
+}
+
+/* Entropy Screen */
+.entropy-input-area {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.progress-container {
+    margin: 20px 0;
+}
+
+.progress-bar-bg {
+    background: #333;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    background: var(--success);
+    height: 100%;
+    transition: width 0.2s;
+}
+
+#entropy-count {
+    text-align: center;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    color: var(--text-muted);
+}
+
+.bits-display textarea {
+    width: 100%;
+    height: 60px;
+    background: #000;
+    border: 1px solid #333;
+    color: #0f0;
+    font-family: monospace;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Mnemonic Screen */
+.mnemonic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.word-chip {
+    background: #333;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    border: 1px solid #444;
+}
+
+.word-num {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-right: 5px;
+}
+
+.alert-box {
+    background: #442222;
+    border: 1px solid #aa3333;
+    color: #ffcccc;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+/* Address Screen */
+.address-list {
+    background: #111;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 15px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+.address-row {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 5px;
+}
+
+.addr-index {
+    color: var(--text-muted);
+    display: block;
+    font-size: 0.8rem;
+}
+
+.addr-val {
+    color: var(--primary);
+}
+
+footer {
+    text-align: center;
+    margin-top: 3rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+}
+
+.actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.actions-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.import-area {
+    width: 100%;
+    height: 120px;
+    background: #000;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 15px;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: monospace;
+}
+
+.import-area:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.feedback-msg {
+    margin-top: 10px;
+    font-weight: bold;
+    min-height: 24px;
+}
+
+.text-error {
+    color: #e74c3c;
+}
+
+.text-success {
+    color: #2ecc71;
+}
+
+/* --- Seed Import Chips & Autocomplete --- */
+
+.seed-input-container {
+    border: 1px solid #444;
+    background: #2a2a2a;
+    padding: 10px;
+    border-radius: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 50px;
+    cursor: text;
+}
+
+.seed-words-list {
+    display: contents;
+}
+
+.word-chip {
+    background: #007bff;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+}
+
+.chip-remove {
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    line-height: 1;
+}
+
+.chip-remove:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.input-wrapper {
+    flex-grow: 1;
+    position: relative;
+    min-width: 120px;
+}
+
+#seed-word-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #eee;
+    font-size: 1rem;
+    outline: none;
+    padding: 4px 0;
+}
+
+.autocomplete-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 200px;
+    background: #333;
+    border: 1px solid #555;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #444;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover,
+.suggestion-item.active {
+    background: #007bff;
+    color: white;
+}
+
+/* --- Passphrase Input --- */
+.passphrase-container {
+    margin-bottom: 1rem;
+}
+
+.passphrase-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #ccc;
+}
+
+.passphrase-container input {
+    width: 100%;
+    padding: 10px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: white;
+    border-radius: 4px;
+}
+
+.small-text {
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 4px;
+}

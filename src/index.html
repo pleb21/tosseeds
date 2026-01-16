@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Seed Simulator</title>
+    <!-- STYLE_INJECTION -->
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Seed Simulator</h1>
+            <p class="subtitle">Offline Bitcoin Mnemonic Generator (Air-Gap Safe)</p>
+        </header>
+
+        <main id="app">
+            <div id="loading">Loading libraries...</div>
+
+            <div id="content" style="display:none;">
+
+                <!-- STEP 1: START -->
+                <div id="screen-start" class="screen">
+                    <div class="card">
+                        <h2>Select Mode</h2>
+                        <div class="actions-vertical">
+                            <h3>Create New Wallet</h3>
+                            <div class="actions">
+                                <button id="btn-start-12" class="btn-primary">12 Words (128 bits)</button>
+                                <button id="btn-start-24" class="btn-primary">24 Words (256 bits)</button>
+                            </div>
+
+                            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #333;">
+
+                            <h3>Existing Wallet</h3>
+                            <div class="actions">
+                                <button id="btn-import" class="btn-secondary">Enter Existing Seed Phrase</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 1b: IMPORT -->
+                <div id="screen-import" class="screen" style="display:none;">
+                    <h2>Import Seed Phrase</h2>
+                    <p>Enter your 12 or 24 words. Type to search, Enter/Tab/Click to select.</p>
+
+                    <div class="seed-input-container">
+                        <div id="seed-words-list" class="seed-words-list"></div>
+                        <div class="input-wrapper">
+                            <input type="text" id="seed-word-input" placeholder="Type a word..." autocomplete="off">
+                            <ul id="seed-suggestions" class="autocomplete-suggestions"></ul>
+                        </div>
+                    </div>
+
+                    <div class="passphrase-container">
+                        <label for="import-passphrase">Passphrase (Optional):</label>
+                        <input type="password" id="import-passphrase" placeholder="Current passphrase (if any)">
+                    </div>
+
+                    <div id="import-feedback" class="feedback-msg"></div>
+
+                    <div class="actions">
+                        <button class="btn-secondary btn-restart">Back</button>
+                        <button id="btn-validate-import" class="btn-primary">Validate & View Addresses</button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: ENTROPY -->
+                <div id="screen-entropy" class="screen" style="display:none;">
+                    <h2>Step 1: Create Entropy</h2>
+                    <p>Flip a coin and enter the results below.</p>
+
+                    <div class="entropy-input-area">
+                        <button onclick="addEntropy('0')" class="btn-toss btn-head">HEADS (0)</button>
+                        <button onclick="addEntropy('1')" class="btn-toss btn-tail">TAILS (1)</button>
+                    </div>
+
+                    <div class="progress-container">
+                        <div class="progress-bar-bg">
+                            <div id="entropy-progress-bar" class="progress-bar-fill" style="width:0%"></div>
+                        </div>
+                        <div id="entropy-count">0 / 128</div>
+                    </div>
+
+                    <div class="bits-display">
+                        <label>Your Tosses:</label>
+                        <textarea id="entropy-bits-display" readonly></textarea>
+                    </div>
+
+                    <div class="actions">
+                        <button onclick="clearEntropy()" class="btn-secondary">Clear</button>
+                        <button id="btn-generate-mnemonic" class="btn-success" disabled>Generate Mnemonic</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: MNEMONIC -->
+                <div id="screen-mnemonic" class="screen" style="display:none;">
+                    <h2>Step 2: Your Recovery Phrase</h2>
+                    <div class="alert-box">
+                        <strong>⚠️ IMPORTANT:</strong> Write these words down on paper effectively. Never save them
+                        purely digitally.
+                    </div>
+
+                    <div id="mnemonic-container" class="mnemonic-grid"></div>
+
+                    <div class="passphrase-container" style="margin-top: 20px;">
+                        <label for="generate-passphrase">Passphrase (Optional):</label>
+                        <input type="password" id="generate-passphrase"
+                            placeholder="Add a passphrase (highly recommended)">
+                        <p class="small-text">Also known as the "25th word". If you use this, you MUST back it up too.
+                        </p>
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn-secondary btn-restart">Start Over</button>
+                        <button id="btn-to-addresses" class="btn-primary">View Addresses &rarr;</button>
+                    </div>
+                </div>
+
+                <!-- STEP 4: ADDRESSES -->
+                <div id="screen-addresses" class="screen" style="display:none;">
+                    <h2>Step 3: Receiving Addresses</h2>
+                    <p>These addresses are derived from your seed phrase.</p>
+
+                    <div id="address-list" class="address-list"></div>
+
+                    <div class="load-more-container" style="text-align: center; margin-top: 20px;">
+                        <input type="number" id="num-addresses-to-add" value="5" min="1" max="50"
+                            style="width: 60px; padding: 5px;">
+                        <button id="btn-load-more" class="btn-secondary">Generate More</button>
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn-secondary btn-restart">Start Over</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer>
+            <p>100% Offline & Open Source | Verifiable Logic</p>
+        </footer>
+    </div>
+
+    <!-- LIBRARY_INJECTION -->
+    <!-- SCRIPT_INJECTION -->
+</body>
+
+</html>
