@@ -1,157 +1,107 @@
-# Bitcoin Mnemonic & Address Generator
 
-A simple, offline Python tool for generating Bitcoin mnemonics (seed phrases) and receiving addresses. Built for educational purposes and personal use with security and transparency in mind.
+# Sovereign Seed Kit
 
----
+A comprehensive, verifiable, and offline-capable tool for generating Bitcoin seed phrases (BIP39) and deriving receiving addresses.
 
-## What Can You Do?
-
-### Generate a New Mnemonic from Coin Flips
-The most secure way to create a Bitcoin wallet. Flip a coin 128 times (for 12 words) or 256 times (for 24 words), and this tool converts your random flips into a valid BIP39 mnemonic phrase.
-
-**Why coin flips?** True randomness is critical for Bitcoin security. Coin flips provide verifiable, physical randomness that you control completely.
-
-### Import an Existing Mnemonic
-Already have a seed phrase? Enter your 12 or 24-word mnemonic to generate receiving addresses from it. The tool validates each word against the official BIP39 wordlist.
-
-### Add a Passphrase (Optional)
-Enhance your security with an optional BIP39 passphrase (sometimes called the "25th word"). This creates an entirely different set of addresses from the same mnemonic.
-
-### Generate Receiving Addresses
-Create Bitcoin addresses to receive funds:
-- **Native SegWit (Bech32)** - Modern format starting with `bc1` (recommended)
-- **Legacy (P2PKH)** - Classic format starting with `1`
-
-Generate up to 10 addresses at once from your mnemonic.
+This tool gives you complete control over your key generation process. It is designed for two distinct use cases:
+1.  **Learning & Testing**: Quickly understand how seeds and addresses work. You toss coin, enter the results, get the seed words.
+2.  **Cold Storage**: A "Paranoid" way to generate new seed through coin tosses OR getting new receiving addresses for your existing seed in a secure, air-gapped environment. The right way.
 
 ---
 
-## Security Features
+## 🚀 Quick Start (Learning Mode)
 
-### Completely Offline
-This tool runs entirely on your computer. No internet connection required, no data sent anywhere.
+If you just want to test it out or see how it works (do NOT use for real funds on an online computer):
 
-### Open Source & Auditable
-All code is visible and can be reviewed. You can read every line to understand exactly what it does.
+1.  Open **`seed_simulator.html`** in your browser.
+2.  Choose **Create New Wallet** / **Existing Wallet**.
+3.  Follow the steps to generate entropy (new seed words) or import an existing seed.
+4.  View your seed, passphrase, and derived addresses.
 
-### No Data Storage
-The script doesn't save your mnemonics, passphrases, or addresses anywhere. Everything exists only in your terminal session.
-
-### Industry-Standard Libraries
-Uses `bip_utils`, a well-maintained Python library implementing official Bitcoin Improvement Proposals (BIP39, BIP44, BIP84).
-
----
-
-## Security Warnings
-
-### NEVER Use Random Generation for Real Funds
-The script includes a "random generation" option for **educational purposes only**. Computer-generated randomness is NOT suitable for securing real Bitcoin. Always use coin flips for actual wallets.
-
-### Verify Your Addresses
-After generating addresses, verify them with another trusted wallet (like Electrum or Bitcoin Core) before receiving real funds. Cross-reference that the same mnemonic produces the same addresses.
-
-### Protect Your Mnemonic
-- Write it down on paper (never store digitally)
-- Keep it in a secure location
-- Never share it with anyone
-- Never enter it on websites or untrusted software
-
-### Don't Trust, Verify
-While I've built this tool with care, you should:
-- Review the source code yourself
-- Test with small amounts first
-- Understand what each function does
-- Use air-gapped computers for maximum security
-
----
-
-## Getting Started
-
-### Requirements
-- Python 3.7+
-- `bip_utils` library
-
-### Installation
-
-1. **Clone or download this repository**
-   ```bash
-   git clone git@github.com:pleb21/tosseeds.git
-   cd tosseeds
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Download BIP39 wordlist**
-   
-   Save the official English BIP39 wordlist as `english.txt` in the same directory. You can find it at:
-   https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt
-
-### Single-File HTML Version (Offline UI)
-
-To use the graphical interface in an air-gapped environment:
-
-1. **Build the HTML file** (Requires Internet once):
-   ```bash
-   python3 build.py
-   ```
-   This downloads necessary JS libraries and bundles them into `seed_simulator.html`.
-
-2. **Go Offline**: Transfer `seed_simulator.html` to your air-gapped machine via USB.
-
-3. **Run**: Open the file in any modern web browser. 
-
-### Usage
-
-Run the script:
+Alternatively, run the Python CLI:
 ```bash
-python toss_or_generate.py
+python3 toss_or_generate.py
 ```
 
-Follow the interactive prompts to:
-1. Choose between generating a new mnemonic or using an existing one
-2. Select 12 or 24 words
-3. Input coin flips or enter your mnemonic
-4. Optionally add a passphrase
-5. Generate receiving addresses
+---
+
+## 🛡️ "The Paranoid Guide" (Cold Storage Mode)
+
+For real wealth storage, you should never trust a pre-compiled file or an online machine. Follow this procedure:
+
+### Prerequisites
+-   **1x Online Computer**: To download the source code.
+-   **1x Offline Computer (Air-Gapped)**: A machine with Python installed that will **NEVER** touch the internet again.
+-   **1x USB Drive**: To transfer the code.
+
+### Step 1: Audit & Transfer
+1.  Download this repository on your *Online Computer*.
+2.  Inspect the `src/` directory. The logic is simple and readable:
+    -   `src/index.html`: The UI structure.
+    -   `src/script.js`: The brain. Uses standard libraries (`bitcoinjs-lib`) for derivation.
+    -   `build.py`: The factory script to combine them.
+3.  **Vendor Dependencies**: Run the build script in download mode to save libraries locally:
+    ```bash
+    python3 build.py --download-only
+    ```
+    This creates a `libs/` folder containing the necessary JavaScript files.
+4.  Copy the entire folder (including the new `libs/` folder) to your **USB Drive**.
+
+### Step 2: The Factory (Offline Build)
+1.  Plug the USB drive into your **Offline Computer**.
+2.  Copy the files to the offline machine.
+3.  Run the build script:
+    ```bash
+    python3 build.py
+    ```
+    *The script will detect the local `libs/` folder and use those files instead of trying to download them.*
+
+### Step 3: Ceremony
+1.  In the offline browser, open `seed_simulator.html`.
+2.  Select **12/24 Words** (256 bits of entropy).
+3.  **Flip a real coin 128/256 times**. Enter the results (Head=0, Tail=1).
+    -   *Why?* Computers are bad at randomness. Physics is honest.
+4.  Write down the **12/24 Seed Words**.
+    -   *Optional*: Add a **Passphrase** (13th/25th word) if you wish to. You should wish to.
+5.  Write down the **Master Fingerprint** (shown on Address screen) to identify this wallet later.
+6.  Generate receiving addresses and photograph/copy/write them down to send funds to.
+7.  **Wipe the machine** or destroy the HTML file.
 
 ---
 
-## How It Works
+## 🛠️ Developer / CLI Usage
 
-This tool follows Bitcoin's official standards:
+You can also use the Python script for terminal-based generation.
 
-- **BIP39**: Converts entropy (randomness) into human-readable mnemonic phrases
-- **BIP44**: Hierarchical Deterministic wallet structure for Legacy addresses
-- **BIP84**: Hierarchical Deterministic wallet structure for Native SegWit addresses
+```bash
+# Install dependencies
+pip install -r requirements.txt
 
-Your coin flips → Binary entropy → Checksum added → Converted to words → Valid mnemonic phrase → Derivation path → Bitcoin addresses
+# Run
+python3 toss_or_generate.py
+```
 
----
-
-## Contributing
-
-Found a bug? Have a suggestion? Open an issue or submit a pull request. Security-related issues should be reported privately.
-
----
-
-## ⚖️ Disclaimer
-
-**This tool is provided "as-is" without any warranty.** You are solely responsible for the security of your Bitcoin. The author assumes no liability for any loss of funds. Always practice good operational security and test thoroughly before using with real funds.
-
-**Educational Use**: This project is primarily for learning about Bitcoin's technical standards. For production use, consider established wallet software with extensive security audits.
+Features:
+-   **Coin Toss Mode**: Manual entry of 128/256 bits.
+-   **Dictionary Check**: Validates if user-supplied words are in the BIP39 list.
+-   **Address Derivation**: Generates Legacy (1...) or SegWit (bc1...) addresses.
 
 ---
 
-## Acknowledgments
+## 📁 File Structure
 
-Built with:
-- [bip_utils](https://github.com/ebellocchia/bip_utils) - Python BIP implementation
-- Bitcoin community's BIP standards
-- The spirit of open-source and financial sovereignty
+```
+├── seed_simulator.html  <-- The Product (Single-file, runs in browser)
+├── toss_or_generate.py  <-- Python CLI tool
+├── build.py             <-- The Factory (Builds the HTML)
+├── requirements.txt     <-- Python deps
+├── english.txt          <-- Wordlist
+└── src/                 <-- Source code for the HTML tool
+    ├── index.html
+    ├── script.js
+    └── style.css
+```
 
 ---
 
-**Remember: Not your keys, not your coins.**
+*Disclaimer: This tool is provided for educational purposes. You are responsible for your own security. Always backup your seed phrases on physical media (paper, metal).*

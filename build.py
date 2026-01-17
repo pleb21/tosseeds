@@ -1,11 +1,13 @@
 import os
 import requests
 import json
+import sys
 
 # Configuration
 OUTPUT_FILE = "seed_simulator.html"
 SRC_DIR = "src"
 WORDLIST_PATH = "english.txt"
+LIBS_DIR = "libs"
 
 # Library candidates (Mirrors)
 # We need bitcoinjs-lib. 
@@ -13,6 +15,7 @@ WORDLIST_PATH = "english.txt"
 LIBS = [
     {
         "name": "buffer",
+        "filename": "buffer.js",
         "urls": [
             "https://bundle.run/buffer@6.0.3",
             "https://unpkg.com/buffer@6.0.3/index.js" # This might be CJS, risky
@@ -21,6 +24,7 @@ LIBS = [
     },
     {
         "name": "bitcoinjs-lib",
+        "filename": "bitcoinjs-lib.js",
         "urls": [
             "https://bundle.run/bitcoinjs-lib@5.2.0",
             "https://wzrd.in/standalone/bitcoinjs-lib@5.2.0",
@@ -55,8 +59,55 @@ def download_lib(lib_entry):
     return None
 
 def main():
-    print("Building single-file Seed Simulator...")
+    download_only = "--download-only" in sys.argv
     
+    if download_only:
+        print("Running in DOWNLOAD ONLY mode...")
+        if not os.path.exists(LIBS_DIR):
+            os.makedirs(LIBS_DIR)
+
+    # 1. Prepare Libraries (Local vs Remote)
+    libs_content = ""
+    
+    for lib in LIBS:
+        content = None
+        local_path = os.path.join(LIBS_DIR, lib["filename"])
+        
+        # A. Check Local
+        if os.path.exists(local_path):
+            print(f"✓ Using local library: {lib['name']} ({local_path})")
+            content = read_file(local_path)
+            
+        # B. Download if missing
+        if not content:
+            if download_only:
+                print(f"Downloading {lib['name']} for offline use...")
+            content = download_lib(lib)
+            
+            # Save if in download mode or if we just want to cache it? 
+            # Let's clean: if download_only, we MUST save. 
+            if content and download_only:
+                with open(local_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                print(f"  Saved to {local_path}")
+                
+        if content:
+            if not download_only:
+                libs_content += f"\n/* {lib['name']} */\n<script>\n{content}\n</script>\n"
+                
+                # SHIM: BitcoinJS requires global Buffer immediately
+                if lib["name"] == "buffer":
+                    libs_content += "<script>if(window.buffer) { window.Buffer = window.buffer.Buffer; console.log('Buffer shim applied'); }</script>\n"
+        else:
+            print(f"WARNING: Missing library {lib['name']}")
+
+    if download_only:
+        print("\n✓ Libraries downloaded. You can now transfer this folder to an offline machine.")
+        print(f"  Run 'python3 build.py' on the offline machine to build.")
+        return
+
+    print("Building single-file Seed Simulator...")
+
     # Read source files
     html = read_file(os.path.join(SRC_DIR, "index.html"))
     css = read_file(os.path.join(SRC_DIR, "style.css"))
@@ -67,19 +118,6 @@ def main():
     words_json = json.dumps(words)
     js_wordlist = f"const BIP39_WORDLIST = {words_json};\n"
     
-    # Download libraries
-    libs_content = ""
-    for lib in LIBS:
-        content = download_lib(lib)
-        if content:
-            libs_content += f"\n/* {lib['name']} */\n<script>\n{content}\n</script>\n"
-            
-            # SHIM: BitcoinJS requires global Buffer immediately
-            if lib["name"] == "buffer":
-                libs_content += "<script>if(window.buffer) { window.Buffer = window.buffer.Buffer; console.log('Buffer shim applied'); }</script>\n"
-        else:
-            print(f"WARNING: Missing library {lib['name']}")
-
     # Inject CSS
     html = html.replace("<!-- STYLE_INJECTION -->", f"<style>\n{css}\n</style>")
     
