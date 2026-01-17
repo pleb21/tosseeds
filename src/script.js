@@ -157,6 +157,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Back Buttons
+    const btnBackEntropy = document.getElementById('btn-back-entropy');
+    if (btnBackEntropy) {
+        btnBackEntropy.addEventListener('click', () => {
+            showScreen('screen-start');
+        });
+    }
+
+    const btnBackMnemonic = document.getElementById('btn-back-mnemonic');
+    if (btnBackMnemonic) {
+        btnBackMnemonic.addEventListener('click', () => {
+            showScreen('screen-entropy');
+        });
+    }
+
+    const btnBackAddresses = document.getElementById('btn-back-addresses');
+    if (btnBackAddresses) {
+        btnBackAddresses.addEventListener('click', () => {
+            showMnemonic(); // Reuse existing function that renders mnemonic
+        });
+    }
+
     // --- Import / Autocomplete Logic ---
     let importedWords = [];
 
@@ -383,12 +405,33 @@ document.addEventListener('DOMContentLoaded', () => {
                     list.innerHTML = `<p style="color:red">Error: BitcoinJS library is missing. Cannot derive addresses.</p>`;
                     return;
                 }
+                const bjs = window.bitcoinjsLib || window.bitcoin;
+                const network = bjs.networks.bitcoin;
 
                 if (!append) {
                     // Regenerate seed just to vary sure if passphrase changed, though usually state is set
                     const seed = await mnemonicToSeed(globalState.mnemonic, globalState.passphrase);
                     globalState.seed = seed;
                     list.innerHTML = ""; // Clear "generating..." text
+
+                    // --- New: Fingerprint & Seed Display ---
+                    const root = bjs.bip32.fromSeed(globalState.seed, network);
+                    // fingerprint is 4 bytes
+                    const fp = root.fingerprint;
+                    const hex = Array.from(fp).map(b => b.toString(16).padStart(2, '0')).join('');
+                    const fpEl = document.getElementById('master-fingerprint');
+                    if (fpEl) fpEl.innerText = hex;
+
+                    const seedDisp = document.getElementById('seed-display-text');
+                    const passDisp = document.getElementById('passphrase-display-text');
+                    if (seedDisp) seedDisp.value = globalState.mnemonic;
+                    if (passDisp) passDisp.value = globalState.passphrase || "(None)";
+
+                    // Reset toggle state
+                    const area = document.getElementById('seed-display-area');
+                    const btn = document.getElementById('btn-toggle-seed');
+                    if (area) area.style.display = 'none';
+                    if (btn) btn.innerText = 'Show Seed details';
                 }
 
                 // Use existing seed (buffer)
@@ -432,6 +475,21 @@ document.addEventListener('DOMContentLoaded', () => {
         btnLoadMore.addEventListener('click', () => {
             const num = parseInt(document.getElementById('num-addresses-to-add').value) || 5;
             generateAddressesUI(num, true);
+        });
+    }
+
+    // Toggle Seed Button
+    const btnToggleSeed = document.getElementById('btn-toggle-seed');
+    if (btnToggleSeed) {
+        btnToggleSeed.addEventListener('click', () => {
+            const area = document.getElementById('seed-display-area');
+            if (area.style.display === 'none') {
+                area.style.display = 'block';
+                btnToggleSeed.innerText = 'Hide Seed details';
+            } else {
+                area.style.display = 'none';
+                btnToggleSeed.innerText = 'Show Seed details';
+            }
         });
     }
 

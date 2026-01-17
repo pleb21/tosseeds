@@ -384,3 +384,65 @@ footer {
     color: #888;
     margin-top: 4px;
 }
+
+/* Address Screen Header */
+.address-header-info {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.fingerprint-row {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.mono {
+    font-family: monospace;
+    color: var(--primary);
+}
+
+.seed-toggle-wrapper {
+    margin-top: 10px;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+#seed-display-area {
+    margin-top: 15px;
+    background: #000;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+
+.seed-block {
+    margin-bottom: 10px;
+}
+
+.seed-block:last-child {
+    margin-bottom: 0;
+}
+
+.seed-block label {
+    display: block;
+    color: #888;
+    font-size: 0.8rem;
+    margin-bottom: 3px;
+}
+
+.seed-block textarea,
+.seed-block input {
+    width: 100%;
+    background: #111;
+    border: 1px solid #444;
+    color: #ccc;
+    padding: 5px;
+    font-family: monospace;
+    box-sizing: border-box;
+}

@@ -56,7 +56,7 @@
 
                     <div class="passphrase-container">
                         <label for="import-passphrase">Passphrase (Optional):</label>
-                        <input type="password" id="import-passphrase" placeholder="Current passphrase (if any)">
+                        <input type="text" id="import-passphrase" placeholder="Current passphrase (if any)">
                     </div>
 
                     <div id="import-feedback" class="feedback-msg"></div>
@@ -90,6 +90,7 @@
                     </div>
 
                     <div class="actions">
+                        <button id="btn-back-entropy" class="btn-secondary">Back</button>
                         <button onclick="clearEntropy()" class="btn-secondary">Clear</button>
                         <button id="btn-generate-mnemonic" class="btn-success" disabled>Generate Mnemonic</button>
                     </div>
@@ -107,13 +108,13 @@
 
                     <div class="passphrase-container" style="margin-top: 20px;">
                         <label for="generate-passphrase">Passphrase (Optional):</label>
-                        <input type="password" id="generate-passphrase"
-                            placeholder="Add a passphrase (highly recommended)">
+                        <input type="text" id="generate-passphrase" placeholder="Add a passphrase (highly recommended)">
                         <p class="small-text">Also known as the "25th word". If you use this, you MUST back it up too.
                         </p>
                     </div>
 
                     <div class="actions">
+                        <button id="btn-back-mnemonic" class="btn-secondary">Back</button>
                         <button class="btn-secondary btn-restart">Start Over</button>
                         <button id="btn-to-addresses" class="btn-primary">View Addresses &rarr;</button>
                     </div>
@@ -124,6 +125,25 @@
                     <h2>Step 3: Receiving Addresses</h2>
                     <p>These addresses are derived from your seed phrase.</p>
 
+                    <div class="address-header-info">
+                        <div class="fingerprint-row">
+                            <strong>Master Fingerprint:</strong> <span id="master-fingerprint" class="mono"></span>
+                        </div>
+                        <div class="seed-toggle-wrapper">
+                            <button id="btn-toggle-seed" class="btn-secondary btn-sm">Show Seed details</button>
+                            <div id="seed-display-area" style="display:none;">
+                                <div class="seed-block">
+                                    <label>Seed Phrase:</label>
+                                    <textarea id="seed-display-text" readonly></textarea>
+                                </div>
+                                <div class="seed-block">
+                                    <label>Passphrase:</label>
+                                    <input type="text" id="passphrase-display-text" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="address-list" class="address-list"></div>
 
                     <div class="load-more-container" style="text-align: center; margin-top: 20px;">
@@ -133,6 +153,7 @@
                     </div>
 
                     <div class="actions">
+                        <button id="btn-back-addresses" class="btn-secondary">Back</button>
                         <button class="btn-secondary btn-restart">Start Over</button>
                     </div>
                 </div>
