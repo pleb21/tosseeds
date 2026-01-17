@@ -11,17 +11,15 @@ This tool gives you complete control over your key generation process. It is des
 
 ## 🚀 Quick Start (Learning Mode)
 
-If you just want to test it out or see how it works (do NOT use for real funds on an online computer):
+If you just want to test it out, confirm it works, or play with it on your phone:
 
-1.  Open **`seed_simulator.html`** in your browser.
-2.  Choose **Create New Wallet** / **Existing Wallet**.
+1.  Open **`test_seed_simulator.html`** in your browser.
+2.  Choose **Start New Wallet** / **Existing Wallet**.
 3.  Follow the steps to generate entropy (new seed words) or import an existing seed.
 4.  View your seed, passphrase, and derived addresses.
 
-Alternatively, run the Python CLI:
-```bash
-python3 toss_or_generate.py
-```
+> **Note**: This `test` file is for educational/demonstration purposes. For securing significant funds, you should build your own copy (see below).
+
 
 ---
 
@@ -44,7 +42,7 @@ For real wealth storage, you should never trust a pre-compiled file or an online
     ```bash
     python3 build.py --download-only
     ```
-    This creates a `libs/` folder containing the necessary JavaScript files.
+    This creates a `libs/` folder containing the necessary JavaScript files. 
 4.  Copy the entire folder (including the new `libs/` folder) to your **USB Drive**.
 
 ### Step 2: The Factory (Offline Build)
@@ -69,34 +67,16 @@ For real wealth storage, you should never trust a pre-compiled file or an online
 
 ---
 
-## 🛠️ Developer / CLI Usage
-
-You can also use the Python script for terminal-based generation.
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run
-python3 toss_or_generate.py
-```
-
-Features:
--   **Coin Toss Mode**: Manual entry of 128/256 bits.
--   **Dictionary Check**: Validates if user-supplied words are in the BIP39 list.
--   **Address Derivation**: Generates Legacy (1...) or SegWit (bc1...) addresses.
 
 ---
 
 ## 📁 File Structure
 
 ```
-├── seed_simulator.html  <-- The Product (Single-file, runs in browser)
-├── toss_or_generate.py  <-- Python CLI tool
-├── build.py             <-- The Factory (Builds the HTML)
-├── requirements.txt     <-- Python deps
-├── english.txt          <-- Wordlist
-└── src/                 <-- Source code for the HTML tool
+├── test_seed_simulator.html <-- Pre-built Demo (For learning/testing)
+├── build.py                 <-- The Factory (Builds the secure seed_simulator.html)
+├── english.txt              <-- Wordlist
+└── src/                     <-- Source code
     ├── index.html
     ├── script.js
     └── style.css
