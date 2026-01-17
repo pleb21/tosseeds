@@ -31,7 +31,7 @@ For real wealth storage, you should never trust a pre-compiled file or an online
 
 ### Prerequisites
 -   **1x Online Computer**: To download the source code.
--   **1x Offline Computer (Air-Gapped)**: A machine with Python installed that will **NEVER** touch the internet again.
+-   **1x Offline Computer (Air-Gapped)**: Any machine with Python 3 installed. **No pip, venv, or external libraries required.**
 -   **1x USB Drive**: To transfer the code.
 
 ### Step 1: Audit & Transfer
@@ -54,7 +54,7 @@ For real wealth storage, you should never trust a pre-compiled file or an online
     ```bash
     python3 build.py
     ```
-    *The script will detect the local `libs/` folder and use those files instead of trying to download them.*
+    *The script is zero-dependency. It will simply stitch the files together using the local `libs/` folder.*
 
 ### Step 3: Ceremony
 1.  In the offline browser, open `seed_simulator.html`.

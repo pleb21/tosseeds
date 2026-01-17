@@ -1,5 +1,6 @@
 import os
-import requests
+import urllib.request
+import urllib.error
 import json
 import sys
 
@@ -48,10 +49,11 @@ def download_lib(lib_entry):
     for url in lib_entry["urls"]:
         try:
             print(f"Attempting to download {name} from {url}...")
-            response = requests.get(url, timeout=10)
-            if response.status_code == 200:
-                print(f"✓ Downloaded {name}")
-                return response.text
+            # Use urllib instead of requests
+            with urllib.request.urlopen(url, timeout=10) as response:
+                if response.status == 200:
+                    print(f"✓ Downloaded {name}")
+                    return response.read().decode('utf-8')
         except Exception as e:
             print(f"✗ Failed {url}: {e}")
     
